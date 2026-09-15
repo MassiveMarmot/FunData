@@ -1,6 +1,8 @@
 ## Nederlands [(↓ English ↓)](#english)
 
-**FunData** - Zie op Funda in één klik hoe de buurt ervoor staat  volgens [CheckJePlek.nl](https://checkjeplek.nl/)
+[**FunData**](https://addons.mozilla.org/nl/firefox/addon/fundata-checkjeplek-op-funda/) - Zie op [Funda](https://funda.nl/) in één klik hoe de buurt ervoor staat volgens [CheckJePlek.nl](https://checkjeplek.nl/)
+
+Fundata is een Firefox extensie: https://addons.mozilla.org/en-GB/firefox/addon/fundata-checkjeplek-op-funda/
 
 - Haalt automatisch omgevingsdata op van het adres van de aangeboden huur- of koopwoning
 - Toont RIVM-scores voor o.a. geluid, luchtkwaliteit en gevaarlijke
@@ -30,8 +32,7 @@
 
 ## English
 
-**FunData** shows you how a neighbourhood measures up according to [CheckJePlek.nl](https://checkjeplek.nl/) right on a Funda
-listing page
+[**FunData**](https://addons.mozilla.org/en-GB/firefox/addon/fundata-checkjeplek-op-funda/) shows you how a neighbourhood measures up according to [CheckJePlek.nl](https://checkjeplek.nl/) right on a [Funda](https://funda.nl/) listing page
 
 - Automatically fetches neighbourhood data when you activate the extension on a
   property detail page on Funda (for sale and for rent)
