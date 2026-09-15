@@ -1,0 +1,54 @@
+:root,
+:root[data-theme="light"] {
+  --bg: #ffffff;
+  --text: #1a1a1a;
+  --text-secondary: #55707f;
+  --accent: #b35900;
+  --border: #d9ebf7;
+}
+
+:root[data-theme="dark"] {
+  --bg: #121417;
+  --text: #f2f2f2;
+  --text-secondary: #9fb3bd;
+  --accent: #64c1ed;
+  --border: #253038;
+}
+
+body {
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  max-width: 420px;
+  margin: 20px auto;
+  color: var(--text);
+  background: var(--bg);
+}
+
+h1 {
+  font-size: 18px;
+}
+
+.field {
+  margin: 18px 0;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border);
+}
+
+.field-label, .field > label:first-child {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+select {
+  font-size: 14px;
+  padding: 4px 6px;
+  color: var(--text);
+  background: var(--bg);
+  border: 1px solid var(--border);
+}
+
+label.radio {
+  display: block;
+  font-weight: normal;
+  margin: 4px 0;
+}

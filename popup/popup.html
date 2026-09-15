@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>FunData</title>
+  <link rel="stylesheet" href="../lib/vendor/leaflet/leaflet.css">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <header>
+    <div class="header-left">
+      <h1 id="popup-title"></h1>
+      <button id="retry-btn" class="retry-inline" hidden></button>
+    </div>
+    <div class="header-right">
+      <label id="theme-toggle-label" class="theme-switch" aria-label="">
+        <input type="checkbox" id="theme-toggle">
+        <span class="theme-switch-track" aria-hidden="true">
+          <svg class="theme-switch-icon icon-sun" viewBox="0 0 24 24" width="11" height="11"><circle cx="12" cy="12" r="5" fill="currentColor"/><g stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.2" y1="4.2" x2="5.6" y2="5.6"/><line x1="18.4" y1="18.4" x2="19.8" y2="19.8"/><line x1="4.2" y1="19.8" x2="5.6" y2="18.4"/><line x1="18.4" y1="5.6" x2="19.8" y2="4.2"/></g></svg>
+          <svg class="theme-switch-icon icon-moon" viewBox="0 0 24 24" width="10" height="10"><path fill="currentColor" d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+          <span class="theme-switch-thumb"></span>
+        </span>
+      </label>
+      <button id="settings-btn" type="button" aria-label="">&#9881;</button>
+    </div>
+  </header>
+
+  <main id="content">
+    <p id="status" role="status"></p>
+
+    <div id="results" hidden>
+      <div id="map-wrap" hidden>
+        <img id="map-img" alt="">
+        <div id="map-pin" aria-hidden="true"></div>
+      </div>
+      <div id="map-dynamic" hidden></div>
+
+      <section id="section-leefomgeving">
+        <h2></h2>
+        <table>
+          <tbody id="leefomgeving-rows"></tbody>
+        </table>
+      </section>
+
+      <section id="section-buurt">
+        <h2></h2>
+        <table>
+          <tbody id="buurt-rows"></tbody>
+        </table>
+      </section>
+
+      <p id="source-note"></p>
+      <a id="atlas-link" href="#" target="_blank" rel="noopener noreferrer"></a>
+    </div>
+  </main>
+
+  <script src="../lib/vendor/leaflet/leaflet.js"></script>
+  <script type="module" src="popup.js"></script>
+</body>
+</html>

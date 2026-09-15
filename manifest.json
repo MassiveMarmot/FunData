@@ -1,0 +1,69 @@
+{
+  "manifest_version": 3,
+  "name": "__MSG_extension_name__",
+  "description": "__MSG_extension_description__",
+  "version": "0.4.0",
+  "default_locale": "en",
+  "homepage_url": "https://github.com/MassiveMarmot/FunData/",
+  "author": "MassiveMarmot",
+
+  "icons": {
+    "48": "icons/icon-48.png",
+    "96": "icons/icon-96.png",
+    "128": "icons/icon-128.png"
+  },
+
+  "permissions": [
+    "activeTab",
+    "storage"
+  ],
+
+  "host_permissions": [
+    "https://www.funda.nl/*",
+    "https://api.pdok.nl/*",
+    "https://data.rivm.nl/*",
+    "https://cas.cloud.sogelink.com/*",
+    "https://service.pdok.nl/*"
+  ],
+
+  "background": {
+    "scripts": ["background.js"],
+    "type": "module"
+  },
+
+  "options_ui": {
+    "page": "options/options.html",
+    "open_in_tab": false
+  },
+
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_title": "__MSG_action_title__",
+    "default_icon": {
+      "48": "icons/icon-48.png",
+      "96": "icons/icon-96.png",
+      "128": "icons/icon-128.png"
+    }
+  },
+
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.funda.nl/detail/koop/*",
+        "https://www.funda.nl/detail/huur/*"
+      ],
+      "js": ["content-scripts/funda.js"],
+      "run_at": "document_idle"
+    }
+  ],
+
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "fundata@massivemarmot.github.io",
+      "strict_min_version": "140.0",
+      "data_collection_permissions": {
+        "required": ["locationInfo", "websiteContent"]
+      }
+    }
+  }
+}
