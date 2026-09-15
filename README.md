@@ -28,6 +28,10 @@ Fundata is een Firefox extensie: https://addons.mozilla.org/en-GB/firefox/addon/
 - Open source (MPL-2.0), broncode volledig beschikbaar op GitHub:
   https://github.com/MassiveMarmot/FunData/
 
+## Disclaimer
+
+FunData is an onafhankelijk hobbyproject. FunData is niet gelieerd aan, goedgekeurd door, of gesponsord door Funda Real Estate B.V. "Funda" is hun handelsmerk; FunData werkt alleen aanvullend op hun website.
+
 ---
 
 ## English
@@ -58,3 +62,7 @@ Fundata is een Firefox extensie: https://addons.mozilla.org/en-GB/firefox/addon/
   browser
 - Open source (MPL-2.0), full source available on GitHub:
   https://github.com/MassiveMarmot/FunData/
+
+## Disclaimer
+
+FunData is an independent hobby project. FunData is not affiliated with, endorsed by, or sponsored by Funda Real Estate B.V. "Funda" is their trademark; FunData simply works alongside their website.
