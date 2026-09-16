@@ -1,0 +1,19 @@
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Editor junk
+.vscode/
+.idea/
+
+# Node tooling (none currently used inside extension/, but harmless
+# to have ready if dev tooling gets added here later)
+node_modules/
+
+# Packaged builds — don't commit built artifacts, only source
+*.zip
+*.xpi
+
+# NOTE: do NOT ignore lib/vendor/leaflet/ — it's manually vendored
+# (no build step fetches it) and AMO's source-review process expects
+# bundled third-party dependencies to be present in the reviewable source.
