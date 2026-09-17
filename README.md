@@ -7,7 +7,7 @@ Fundata is een Firefox extensie: https://addons.mozilla.org/en-GB/firefox/addon/
 - Haalt automatisch omgevingsdata op van het adres van de aangeboden huur- of koopwoning
 - Toont RIVM-scores voor o.a. geluid, luchtkwaliteit en gevaarlijke
   stoffen, met dezelfde smiley-iconen als de officiële "Check je Plek"-tool
-- Interactieve kaart (Leaflet) gecentreerd op het adres, met een
+- Interactieve kaart ([Leaflet 🇺🇦](https://leafletjs.com/)) gecentreerd op het adres, met een
   optionele kadastrale-kaartlaag (PDOK/Kadaster)
 - Licht/donker thema, automatisch op basis van je browser- of
   systeeminstelling, met handmatige schakelaar
@@ -43,7 +43,7 @@ FunData is an onafhankelijk hobbyproject. FunData is niet gelieerd aan, goedgeke
 - Displays RIVM scores for things like noise, air quality and hazardous
   substances, using the same smiley icons as the official "Check je
   Plek" tool
-- Interactive map (Leaflet) centred on the address, with an optional
+- Interactive map ([Leaflet 🇺🇦](https://leafletjs.com/)) centred on the address, with an optional
   cadastral boundary overlay (PDOK/Kadaster)
 - Light/dark theme, auto-detected from your browser or system
   preference, with a manual override switch
