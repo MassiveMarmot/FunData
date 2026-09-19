@@ -1,47 +1,89 @@
-/* Theme variables. 'light' values also serve as the fallback before JS
-   applies data-theme (main.js sets this synchronously on load, so the
-   flash-of-wrong-theme window is effectively a single paint at most).
-   Derived from Funda's own brand colours (blue #64C1ED, orange #FF9B21),
-   adjusted where needed to meet WCAG 2.1 AA contrast (>=4.5:1 text,
-   >=3:1 UI components) -- see REVIEW.md for the verified ratios. */
-:root,
-:root[data-theme="light"] {
+// Panel CSS as a JS string, injected into the panel's shadow root as a
+// <style> element's textContent (not a <link>). This file is itself
+// loaded into the content script via dynamic import(), which -- like any
+// other extension resource a content script loads -- requires its path to
+// be listed in manifest.json's web_accessible_resources. Shares the same
+// theme tokens and table/badge rules as popup/popup.css so the content
+// looks identical; adds the slide-in shell, backdrop, and close button
+// that only the panel needs.
+export const PANEL_CSS = `
+:host {
+  all: initial;
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 13px;
+}
+
+:host, .panel {
   --bg: #ffffff;
-  --surface: #64c1ed;       /* Funda blue, used as-is: dark text on it is 8.6:1 */
+  --surface: #64c1ed;
   --surface-border: #3fa0d4;
-  --text: #1a1a1a;          /* 17.4:1 on --bg */
+  --text: #1a1a1a;
   --text-on-surface: #0d2733;
-  --text-secondary: #55707f; /* 5.2:1 on --bg */
-  --accent: #b35900;         /* darkened Funda orange: raw #FF9B21 is only
-                                 2.1:1 on white and fails both text and
-                                 UI-component contrast; this passes at 4.8:1 */
+  --text-secondary: #55707f;
+  --accent: #b35900;
   --border: #eef2f4;
   --row-hover: #f4f9fc;
   --map-bg: #eee;
 }
 
-:root[data-theme="dark"] {
+:host([data-theme="dark"]) .panel {
   --bg: #121417;
-  --surface: #17303d;        /* dark, blue-tinted -- derived from Funda blue */
+  --surface: #17303d;
   --surface-border: #234456;
-  --text: #f2f2f2;           /* 16.5:1 on --bg */
+  --text: #f2f2f2;
   --text-on-surface: #f2f2f2;
-  --text-secondary: #9fb3bd; /* 8.5:1 on --bg */
-  --accent: #64c1ed;         /* Funda blue works directly here: 9.1:1 on --bg */
+  --text-secondary: #9fb3bd;
+  --accent: #64c1ed;
   --border: #253038;
   --row-hover: #1a1f24;
   --map-bg: #1a1f24;
 }
 
-body {
-  width: 360px;
-  max-height: 560px;
-  overflow-y: auto;
-  margin: 0;
-  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
-  font-size: 13px;
-  color: var(--text);
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483646;
+  background: rgba(0, 0, 0, 0.35);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.18s ease;
+}
+
+:host([data-open="true"]) .backdrop {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2147483647;
+  width: min(380px, 100vw);
   background: var(--bg);
+  color: var(--text);
+  box-shadow: -2px 0 16px rgba(0, 0, 0, 0.25);
+  transform: translateX(100%);
+  transition: transform 0.22s ease;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+:host([data-open="true"]) .panel {
+  pointer-events: auto;
+}
+
+:host([data-open="true"]) .panel {
+  transform: translateX(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .panel, .backdrop {
+    transition: none;
+  }
 }
 
 header {
@@ -52,6 +94,7 @@ header {
   align-items: center;
   justify-content: space-between;
   gap: 10px;
+  flex-shrink: 0;
 }
 
 .header-left {
@@ -74,10 +117,6 @@ header h1 {
   color: var(--text-on-surface);
 }
 
-/* Retry button, moved next to the title per feedback that it should stand
-   out less than an ordinary button -- styled as a quiet inline text link
-   rather than a filled button, since it's a secondary/recovery action, not
-   a primary one. */
 .retry-inline {
   background: none;
   border: none;
@@ -93,7 +132,6 @@ header h1 {
   opacity: 1;
 }
 
-/* Theme toggle switch */
 .theme-switch {
   position: relative;
   display: inline-flex;
@@ -127,13 +165,8 @@ header h1 {
   pointer-events: none;
 }
 
-.icon-sun {
-  left: 3px;
-}
-
-.icon-moon {
-  right: 3px;
-}
+.icon-sun { left: 3px; }
+.icon-moon { right: 3px; }
 
 .theme-switch-thumb {
   position: absolute;
@@ -160,28 +193,29 @@ header h1 {
   outline-offset: 2px;
 }
 
-#settings-btn {
+#settings-btn, #fundata-close {
   background: none;
   border: none;
   font-size: 16px;
   line-height: 1;
   cursor: pointer;
-  padding: 2px 4px;
+  padding: 2px 6px;
   border-radius: 4px;
   color: var(--text-on-surface);
 }
 
-#settings-btn:hover, #settings-btn:focus-visible {
+#settings-btn:hover, #settings-btn:focus-visible,
+#fundata-close:hover, #fundata-close:focus-visible {
   background: rgba(13, 39, 51, 0.12);
 }
 
 main {
   padding: 10px 14px 14px;
+  overflow-y: auto;
+  flex: 1;
 }
 
-#status {
-  margin: 10px 0;
-}
+#status { margin: 10px 0; }
 
 #map-wrap {
   position: relative;
@@ -230,10 +264,7 @@ section h2 {
   margin: 14px 0 4px;
 }
 
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
+table { width: 100%; border-collapse: collapse; }
 
 td {
   padding: 4px 0;
@@ -241,10 +272,7 @@ td {
   border-bottom: 1px solid var(--border);
 }
 
-td.label {
-  padding-right: 8px;
-  width: 55%;
-}
+td.label { padding-right: 8px; width: 55%; }
 
 td.value {
   display: flex;
@@ -256,14 +284,8 @@ td.value {
   text-align: right;
 }
 
-.value-text {
-  overflow-wrap: anywhere;
-}
+.value-text { overflow-wrap: anywhere; }
 
-/* Long free-text values (e.g. the hazardous-substances list) get a second,
-   full-width row instead of being squeezed into the narrow right-hand
-   value column — avoids relying on non-standard display overrides on
-   table rows/cells. */
 tr.wrap-label td {
   border-bottom: none;
   padding-bottom: 0;
@@ -293,13 +315,7 @@ tr.wrap-value td {
 .badge-slecht { background: #e53935; }
 .badge-none { background: #9e9e9e; }
 
-/* RIVM's own smiley icons (bundled locally), shown instead of a text badge
-   when the score-display setting is set to icons. */
-.badge-icon {
-  vertical-align: middle;
-  width: 19px;
-  height: 19px;
-}
+.badge-icon { vertical-align: middle; width: 19px; height: 19px; }
 
 #source-note {
   margin-top: 14px;
@@ -316,16 +332,14 @@ tr.wrap-value td {
   color: var(--accent);
 }
 
-/* Leaflet's layer-control panel doesn't inherit our theme variables (it's
-   Leaflet's own default white/black styling) -- override just enough for
-   it to stay legible in dark mode rather than showing white-on-white. */
-:root[data-theme="dark"] .leaflet-control-layers {
+:host([data-theme="dark"]) .leaflet-control-layers {
   background: var(--surface);
   color: var(--text);
 }
 
-:root[data-theme="dark"] .leaflet-bar a {
+:host([data-theme="dark"]) .leaflet-bar a {
   background: var(--surface);
   color: var(--text);
   border-color: var(--border);
 }
+`;

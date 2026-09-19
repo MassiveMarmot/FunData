@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "__MSG_extension_name__",
   "description": "__MSG_extension_description__",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "default_locale": "en",
   "homepage_url": "https://github.com/MassiveMarmot/FunData/",
   "author": "MassiveMarmot",
@@ -14,7 +14,6 @@
   },
 
   "permissions": [
-    "activeTab",
     "storage"
   ],
 
@@ -23,7 +22,8 @@
     "https://api.pdok.nl/*",
     "https://data.rivm.nl/*",
     "https://cas.cloud.sogelink.com/*",
-    "https://service.pdok.nl/*"
+    "https://service.pdok.nl/*",
+    "https://geo.leefbaarometer.nl/*"
   ],
 
   "background": {
@@ -37,7 +37,6 @@
   },
 
   "action": {
-    "default_popup": "popup/popup.html",
     "default_title": "__MSG_action_title__",
     "default_icon": {
       "48": "icons/icon-48.png",
@@ -52,8 +51,36 @@
         "https://www.funda.nl/detail/koop/*",
         "https://www.funda.nl/detail/huur/*"
       ],
-      "js": ["content-scripts/funda.js"],
+      "js": [
+        "content-scripts/funda.js",
+        "lib/vendor/leaflet/leaflet.js",
+        "content-scripts/panel.js"
+      ],
       "run_at": "document_idle"
+    }
+  ],
+
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "lib/render-pipeline.js",
+        "lib/settings.js",
+        "lib/i18n.js",
+        "lib/emoji.js",
+        "content-scripts/panel.css.js",
+        "_locales/en/messages.json",
+        "_locales/nl/messages.json",
+        "lib/vendor/leaflet/leaflet.css",
+        "lib/vendor/leaflet/images/layers.png",
+        "lib/vendor/leaflet/images/layers-2x.png",
+        "icons/scores/emoticon-0-goed.png",
+        "icons/scores/emoticon-1-matig.png",
+        "icons/scores/emoticon-2-neutraal.png",
+        "icons/scores/emoticon-3-onvoldoende.png",
+        "icons/scores/emoticon-4-slecht.png",
+        "icons/icon-128.png"
+      ],
+      "matches": ["https://www.funda.nl/*"]
     }
   ],
 

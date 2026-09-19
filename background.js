@@ -1,5 +1,6 @@
 import { geocodeAddress } from './lib/pdok.js';
 import { rdToPixel, fetchAllLayers } from './lib/wms.js';
+import { getSettings } from './lib/settings.js';
 import { LEEFOMGEVING_LAYERS, BUURT_LAYERS } from './lib/layers.js';
 
 // Builds a static-map image URL (PDOK WMTS background map tile, RESTful
@@ -69,7 +70,15 @@ async function handleCheckPlek(address) {
 }
 
 browser.runtime.onMessage.addListener((message, sender) => {
-  if (!message || message.type !== 'CHECK_PLEK') return undefined;
+  if (!message) return undefined;
+
+  if (message.type === 'OPEN_OPTIONS') {
+    // runtime.openOptionsPage() isn't available from a content script's
+    // execution context -- the injected panel relays the request here.
+    return browser.runtime.openOptionsPage();
+  }
+
+  if (message.type !== 'CHECK_PLEK') return undefined;
   // Basic sanity limit on attacker-controlled input length before it's used
   // to build outgoing URLs (see security review notes in README).
   const address = typeof message.address === 'string' ? message.address.slice(0, 200) : '';
@@ -79,4 +88,42 @@ browser.runtime.onMessage.addListener((message, sender) => {
   return handleCheckPlek(address)
     .then((data) => ({ ok: true, data }))
     .catch((err) => ({ ok: false, code: err.code || 'UNKNOWN', message: err.message }));
+});
+
+// --- Toolbar button behaviour (settings.toolbarMode) ---------------------
+// 'panel' (default): no popup is set, so a click fires action.onClicked and
+// we toggle the in-page panel. 'popup': the classic pop-out is set as the
+// action's popup. Applied on every wake, on startup/install, and whenever
+// the setting changes.
+const POPUP_URL = 'popup/popup.html';
+
+async function applyToolbarMode() {
+  const { toolbarMode } = await getSettings();
+  await browser.action.setPopup({ popup: toolbarMode === 'popup' ? POPUP_URL : '' });
+}
+
+applyToolbarMode();
+browser.runtime.onStartup.addListener(applyToolbarMode);
+browser.runtime.onInstalled.addListener(applyToolbarMode);
+browser.storage.onChanged.addListener((changes, area) => {
+  if (area === 'local' && changes.settings) applyToolbarMode();
+});
+
+browser.action.onClicked.addListener(async (tab) => {
+  // Only fires when no popup is set. If that's stale (setting is 'popup'),
+  // fix it and show the pop-out instead.
+  const { toolbarMode } = await getSettings();
+  if (toolbarMode === 'popup') {
+    await applyToolbarMode();
+    return browser.action.openPopup();
+  }
+  try {
+    await browser.tabs.sendMessage(tab.id, { type: 'TOGGLE_PANEL' });
+  } catch {
+    // No content script here (not a Funda listing): show the pop-out for
+    // this tab only, which explains that. Tab-scoped popups reset on
+    // navigation.
+    await browser.action.setPopup({ tabId: tab.id, popup: POPUP_URL });
+    await browser.action.openPopup();
+  }
 });

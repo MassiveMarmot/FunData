@@ -5,6 +5,8 @@ function el(id) {
   return document.getElementById(id);
 }
 
+let bound = false; // main() re-runs on language change; attach listeners once
+
 async function main() {
   const settings = await getSettings();
   document.documentElement.setAttribute('data-theme', await resolveTheme(settings.theme));
@@ -27,9 +29,12 @@ async function main() {
   el('label-theme-auto').textContent = t('settings_theme_auto');
   el('label-theme-light').textContent = t('settings_theme_light');
   el('label-theme-dark').textContent = t('settings_theme_dark');
+  el('label-toolbar').textContent = t('settings_toolbar_label');
+  el('label-toolbar-panel').textContent = t('settings_toolbar_panel');
+  el('label-toolbar-popup').textContent = t('settings_toolbar_popup');
 
   const languageSelect = el('language');
-  languageSelect.innerHTML = '';
+  languageSelect.replaceChildren();
   for (const { code, labelKey } of SUPPORTED_LANGUAGES) {
     const opt = document.createElement('option');
     opt.value = code;
@@ -37,7 +42,7 @@ async function main() {
     languageSelect.appendChild(opt);
   }
   languageSelect.value = settings.language;
-  languageSelect.addEventListener('change', async () => {
+  if (!bound) languageSelect.addEventListener('change', async () => {
     await setSetting('language', languageSelect.value);
     // Re-render this page's own text immediately in the newly chosen language.
     main();
@@ -45,21 +50,27 @@ async function main() {
 
   for (const input of document.querySelectorAll('input[name="scoreDisplay"]')) {
     input.checked = input.value === settings.scoreDisplay;
-    input.addEventListener('change', () => setSetting('scoreDisplay', input.value));
+    if (!bound) input.addEventListener('change', () => setSetting('scoreDisplay', input.value));
   }
 
   for (const input of document.querySelectorAll('input[name="mapMode"]')) {
     input.checked = input.value === settings.mapMode;
-    input.addEventListener('change', () => setSetting('mapMode', input.value));
+    if (!bound) input.addEventListener('change', () => setSetting('mapMode', input.value));
+  }
+
+  for (const input of document.querySelectorAll('input[name="toolbarMode"]')) {
+    input.checked = input.value === settings.toolbarMode;
+    if (!bound) input.addEventListener('change', () => setSetting('toolbarMode', input.value));
   }
 
   for (const input of document.querySelectorAll('input[name="theme"]')) {
     input.checked = input.value === settings.theme;
-    input.addEventListener('change', async () => {
+    if (!bound) input.addEventListener('change', async () => {
       await setSetting('theme', input.value);
       document.documentElement.setAttribute('data-theme', await resolveTheme(input.value));
     });
   }
+  bound = true;
 }
 
 main();

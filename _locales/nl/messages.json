@@ -2,6 +2,8 @@
   "extension_name": { "message": "FunData voor Funda" },
   "extension_description": { "message": "Toont RIVM Check je Plek gegevens over leefomgeving en buurt voor het adres van een Funda-woning." },
   "action_title": { "message": "Toon FunData voor deze woning" },
+  "panel_open_label": { "message": "FunData-paneel openen" },
+  "panel_close_label": { "message": "FunData-paneel sluiten" },
 
   "popup_title": { "message": "FunData" },
   "loading": { "message": "Adres wordt opgezocht\u2026" },
@@ -19,7 +21,7 @@
   "open_in_atlas": { "message": "Open in Atlas Leefomgeving" },
   "data_source_note": { "message": "Bron: RIVM Atlas Leefomgeving / Check je Plek (open data)." },
   "map_layer_control_kadaster": { "message": "Kadastrale grenzen" },
-  "map_layer_control_base": { "message": "Kaart" },
+  "map_layer_control_leefbaarometer": { "message": "Leefbaarheid (Leefbaarometer)" },
 
   "score_zeer_goed": { "message": "Zeer goed" },
   "score_goed": { "message": "Goed" },
@@ -85,5 +87,9 @@
   "settings_theme_dark": { "message": "Donker" },
   "lang_auto": { "message": "Volg browsertaal" },
   "lang_en": { "message": "English" },
-  "lang_nl": { "message": "Nederlands" }
+  "lang_nl": { "message": "Nederlands" },
+  "open_in_leefbaarometer": { "message": "Open Leefbaarometer" },
+  "settings_toolbar_label": { "message": "Werkbalkknop" },
+  "settings_toolbar_panel": { "message": "Zijpaneel op de pagina aan/uit" },
+  "settings_toolbar_popup": { "message": "Pop-out openen" }
 }
