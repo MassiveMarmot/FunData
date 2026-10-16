@@ -23,6 +23,8 @@ export const PANEL_CSS = `
   --accent: #b35900;
   --border: #eef2f4;
   --row-hover: #f4f9fc;
+  --card: #f4f9fc;
+  --card-border: #e4ecf1;
   --map-bg: #eee;
 }
 
@@ -36,6 +38,8 @@ export const PANEL_CSS = `
   --accent: #64c1ed;
   --border: #253038;
   --row-hover: #1a1f24;
+  --card: #171c21;
+  --card-border: #253038;
   --map-bg: #1a1f24;
 }
 
@@ -256,43 +260,106 @@ main {
   background: var(--map-bg);
 }
 
-section h2 {
+/* Collapsible section cards. Native <details>/<summary> keeps the section
+   headings keyboard-operable with no extra JS. */
+details.card {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+  margin: 0 0 8px;
+  overflow: hidden;
+}
+
+details.card summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 10px;
+  cursor: pointer;
+  user-select: none;
+  list-style: none;
+}
+
+details.card summary::-webkit-details-marker { display: none; }
+details.card summary::marker { content: ''; }
+
+summary h2 {
   font-size: 13px;
   text-transform: uppercase;
   letter-spacing: 0.02em;
   color: var(--text-secondary);
-  margin: 14px 0 4px;
+  margin: 0;
 }
 
-table { width: 100%; border-collapse: collapse; }
+.chevron {
+  flex-shrink: 0;
+  color: var(--text-secondary);
+  transition: transform 0.15s ease;
+}
 
+details.card[open] .chevron { transform: rotate(90deg); }
+
+details.card table {
+  width: auto;
+  margin: 0 10px 8px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Rows: a uniform minimum height and a single hairline divider between
+   rows. Height on a td acts as a minimum, so wrapped rows still grow. */
 td {
   padding: 4px 0;
-  vertical-align: top;
-  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+  height: 28px;
 }
+
+tr + tr td { border-top: 1px solid var(--border); }
 
 td.label { padding-right: 8px; width: 55%; }
 
+/* Value cells are a two-column grid: a flexible value column and a fixed
+   score column, so values and scores line up across rows in both score
+   display modes (text badges and 19px icons share the same slot). */
 td.value {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-  align-items: center;
+  display: grid;
+  grid-template-columns: minmax(84px, 1fr) 76px;
   column-gap: 6px;
-  row-gap: 2px;
+  align-items: center;
   text-align: right;
 }
 
-.value-text { overflow-wrap: anywhere; }
+.value-text {
+  grid-column: 1;
+  justify-self: end;
+  overflow-wrap: anywhere;
+}
 
+.badge,
+.badge-icon {
+  grid-column: 2;
+  justify-self: center;
+}
+
+/* Empty rows show exactly one em-dash in the secondary colour. */
+.nodata { color: var(--text-secondary); }
+
+/* Long free-text values (e.g. the hazardous-substances list) get a second,
+   full-width row instead of being squeezed into the narrow right-hand
+   value column — avoids relying on non-standard display overrides on
+   table rows/cells. No divider between the two halves of the pair. */
 tr.wrap-label td {
-  border-bottom: none;
   padding-bottom: 0;
   font-weight: 600;
 }
 
 tr.wrap-value td {
+  border-top: none;
   padding-top: 2px;
   text-align: left;
   white-space: normal;
@@ -309,11 +376,11 @@ tr.wrap-value td {
 }
 
 .badge-zeer_goed { background: #2e7d32; }
-.badge-goed { background: #66bb6a; }
+.badge-goed { background: #66bb6a; color: #3a2a00; }
 .badge-redelijk { background: #ffb300; color: #3a2a00; }
-.badge-matig { background: #fb8c00; }
-.badge-slecht { background: #e53935; }
-.badge-none { background: #9e9e9e; }
+.badge-matig { background: #fb8c00; color: #3a2a00; }
+.badge-slecht { background: #e53935; color: #000000; }
+.badge-none { background: #9e9e9e; color: #3a2a00; }
 
 .badge-icon { vertical-align: middle; width: 19px; height: 19px; }
 
@@ -341,5 +408,29 @@ tr.wrap-value td {
   background: var(--surface);
   color: var(--text);
   border-color: var(--border);
+}
+
+/* Visible focus in both themes. Header controls sit on the blue surface,
+   content controls on the page background. */
+summary:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: -2px;
+}
+
+.retry-inline:focus-visible,
+#settings-btn:focus-visible,
+#fundata-close:focus-visible {
+  outline: 2px solid var(--text-on-surface);
+  outline-offset: 2px;
+}
+
+#atlas-link:focus-visible,
+#leefbaarometer-link:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chevron { transition: none; }
 }
 `;
