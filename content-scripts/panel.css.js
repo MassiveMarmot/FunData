@@ -301,7 +301,7 @@ summary h2 {
 details.card[open] .chevron { transform: rotate(90deg); }
 
 details.card table {
-  width: auto;
+  width: calc(100% - 20px); /* fill the card, keep the 10px side margins */
   margin: 0 10px 8px;
 }
 
@@ -321,23 +321,38 @@ td {
 
 tr + tr td { border-top: 1px solid var(--border); }
 
-td.label { padding-right: 8px; width: 55%; }
+td.label { padding-right: 8px; width: 48%; }
 
-/* Value cells are a two-column grid: a flexible value column and a fixed
-   score column, so values and scores line up across rows in both score
-   display modes (text badges and 19px icons share the same slot). */
-td.value {
+/* Value cells stay real table cells (the 28px td height is a minimum);
+   the two-column value/score grid is on a wrapper div inside the cell,
+   never on the td itself -- a td with display:grid stops being a
+   table-cell box, which turned that height into a hard height and let
+   taller content overflow into the rows below. The fixed score column
+   keeps values and scores lined up across rows in both score display
+   modes (text badges and 19px icons share the same slot). */
+td.value { text-align: right; }
+
+/* Text-badge slot: kept at 76px, sized to fit the widest badge
+   ("Zeer goed"). TODO: confirm with devtools on a real render -- could
+   not be measured in the dev sandbox (no browser available). */
+.value-grid {
   display: grid;
   grid-template-columns: minmax(84px, 1fr) 76px;
   column-gap: 6px;
   align-items: center;
-  text-align: right;
+}
+
+/* Icon slot: only needs to fit the 19px RIVM icon (24px incl. slack),
+   which frees ~52px of width for the value column in emoji mode. */
+tbody.score-emoji .value-grid {
+  grid-template-columns: minmax(84px, 1fr) 24px;
 }
 
 .value-text {
   grid-column: 1;
   justify-self: end;
-  overflow-wrap: anywhere;
+  /* break-word, not anywhere: words only break when nothing else fits */
+  overflow-wrap: break-word;
 }
 
 .badge,
