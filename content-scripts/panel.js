@@ -330,8 +330,8 @@
           <div id="results" hidden>
             <div id="map-wrap" hidden><img id="map-img" alt=""><div id="map-pin" aria-hidden="true"></div></div>
             <div id="map-dynamic" hidden></div>
-            <section id="section-leefomgeving"><h2></h2><table><tbody id="leefomgeving-rows"></tbody></table></section>
-            <section id="section-buurt"><h2></h2><table><tbody id="buurt-rows"></tbody></table></section>
+            <details id="section-leefomgeving" class="card" open><summary><h2></h2><svg class="chevron" aria-hidden="true" viewBox="0 0 12 12" width="12" height="12"><path d="M3 1.5 8.5 6 3 10.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></summary><table><tbody id="leefomgeving-rows"></tbody></table></details>
+            <details id="section-buurt" class="card" open><summary><h2></h2><svg class="chevron" aria-hidden="true" viewBox="0 0 12 12" width="12" height="12"><path d="M3 1.5 8.5 6 3 10.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></summary><table><tbody id="buurt-rows"></tbody></table></details>
             <p id="source-note"></p>
             <a id="atlas-link" href="#" target="_blank" rel="noopener noreferrer"></a>
             <a id="leefbaarometer-link" href="#" target="_blank" rel="noopener noreferrer"></a>
