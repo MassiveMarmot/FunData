@@ -26,7 +26,7 @@
   --bg: #121417;
   --surface: #17303d;        /* dark, blue-tinted -- derived from Funda blue */
   --surface-border: #234456;
-  --text: #f2f2f2;          /* 16.5:1 on --bg */
+  --text: #f2f2f2;           /* 16.5:1 on --bg */
   --text-on-surface: #f2f2f2;
   --text-secondary: #9fb3bd; /* 8.5:1 on --bg */
   --accent: #64c1ed;         /* Funda blue works directly here: 9.1:1 on --bg */
@@ -115,7 +115,7 @@ header h1 {
 .theme-switch-track {
   display: inline-block;
   width: 32px;
-  height: 18'px;
+  height: 18px;
   border-radius: 9px;
   background: rgba(13, 39, 51, 0.25);
   position: relative;
@@ -378,7 +378,7 @@ tr.wrap-value td {
   color: var(--accent);
 }
 
-/* Leaflet's layer-control panel doesn't inherit our theme variables (it's,
+/* Leaflet's layer-control panel doesn't inherit our theme variables (it's
    Leaflet's own default white/black styling) -- override just enough for
    it to stay legible in dark mode rather than showing white-on-white. */
 :root[data-theme="dark"] .leaflet-control-layers {
