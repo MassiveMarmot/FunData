@@ -15,6 +15,10 @@
   "retry": { "message": "Try again" },
   "no_data": { "message": "No data available" },
 
+  "host_access_notice": { "message": "FunData needs your permission to read the listing's address on funda.nl and to call the Dutch government data services it uses (PDOK, RIVM, Sogelink, Leefbaarometer) directly. There are no analytics and nothing is sent anywhere else." },
+  "host_access_grant": { "message": "Grant access" },
+  "host_access_denied": { "message": "Without this access, FunData cannot work on Funda. You can also grant it later: about:addons \u2192 FunData \u2192 Permissions \u2192 allow funda.nl." },
+
   "section_leefomgeving": { "message": "Environmental quality" },
   "section_buurt": { "message": "Neighbourhood information" },
   "map_alt": { "message": "Map showing the location" },

@@ -1,12 +1,18 @@
 import { getSettings, setSetting, resolveLanguage, resolveTheme } from '../lib/settings.js';
 import { loadTranslations } from '../lib/i18n.js';
 import { createRenderer } from '../lib/render-pipeline.js';
+import { hasHostAccess, requestHostAccess } from '../lib/host-access.js';
 
 const FUNDA_DETAIL_RE = /^https:\/\/www\.funda\.nl\/detail\/(koop|huur|nieuwbouw)\//;
 
 let MESSAGES = {};
 let SETTINGS = null;
 let renderer = null;
+
+// Monotonic run token: a second main() (e.g. the permissions.onAdded
+// listener firing right after the grant button's own main()) invalidates the
+// in-flight run, so stale renders can't clobber fresh ones.
+let currentRun = 0;
 
 // Manual {0}/{1} substitution -- see lib/i18n.js header comment for why we
 // don't use WebExtension's native $1-style substitution here.
@@ -34,14 +40,39 @@ async function getActiveFundaTab() {
   return tab;
 }
 
+// Shows or hides the host-access notice and, when access is missing, hides
+// the normal content. Returns whether access is currently granted.
+async function updateAccessUI() {
+  const hasAccess = await hasHostAccess();
+  el('host-access-notice').hidden = hasAccess;
+  el('host-access-denied').hidden = true;
+  if (!hasAccess) {
+    el('status').hidden = true;
+    el('results').hidden = true;
+    el('retry-btn').hidden = true;
+  }
+  return hasAccess;
+}
+
 async function main() {
+  const run = ++currentRun;
   SETTINGS = await getSettings();
   // Apply theme before the (slightly slower) translation-file fetch, to
   // minimize the light-theme flash for dark-theme users on a fresh popup.
   renderer.applyTheme(await resolveTheme(SETTINGS.theme));
   MESSAGES = await loadTranslations(resolveLanguage(SETTINGS.language));
+  if (run !== currentRun) return;
 
   renderer.setStaticText();
+  el('host-access-text').textContent = t('host_access_notice');
+  el('host-access-btn').textContent = t('host_access_grant');
+  el('host-access-denied').textContent = t('host_access_denied');
+
+  // Without the host permissions the content script doesn't run and the
+  // background's fetches fail -- say why instead of a generic error.
+  if (!(await updateAccessUI())) return;
+  if (run !== currentRun) return;
+
   renderer.showStatus(t('loading'));
 
   const tab = await getActiveFundaTab();
@@ -64,6 +95,7 @@ async function main() {
     renderer.showStatus(t('error_generic'), { showRetry: true });
     return;
   }
+  if (run !== currentRun) return;
 
   if (addressResponse?.error === 'NIEUWBOUW') {
     renderer.showStatus(t('error_nieuwbouw'));
@@ -83,6 +115,7 @@ async function main() {
     renderer.showStatus(t('error_generic'), { showRetry: true });
     return;
   }
+  if (run !== currentRun) return;
 
   if (!checkResponse?.ok) {
     if (checkResponse?.code === 'NOT_FOUND') {
@@ -105,6 +138,28 @@ el('theme-toggle').addEventListener('change', async (e) => {
   renderer.applyTheme(newTheme);
   await setSetting('theme', newTheme);
 });
+
+// requestHostAccess() (browser.permissions.request) must run directly inside
+// the user-gesture handler, with nothing awaited before it -- Firefox only
+// shows the prompt from a user action.
+el('host-access-btn').addEventListener('click', async () => {
+  let granted = false;
+  try {
+    granted = await requestHostAccess();
+  } catch (err) {
+    granted = false; // request() rejects rather than resolving false
+  }
+  if (granted) {
+    if (await updateAccessUI()) main(); // notice clears, content loads; no manual reload
+  } else {
+    el('host-access-denied').hidden = false;
+  }
+});
+
+// Follow grants/revocations made outside this popup (about:addons) while it
+// is open: main() re-checks access and shows/hides the notice accordingly.
+browser.permissions.onAdded.addListener(() => main());
+browser.permissions.onRemoved.addListener(() => main());
 
 // React live if the OS/browser theme changes while set to 'auto', without
 // needing the popup to be reopened.

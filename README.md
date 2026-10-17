@@ -17,6 +17,10 @@ FunData is een Firefox extensie: https://addons.mozilla.org/en-GB/firefox/addon/
 - Instelbaar: taal (Nederlands/Engels), scores als iconen of als tekstlabels,
   statische of dynamische kaart, en wat het werkbalkpictogram doet
 
+**Toegang tot de site**
+
+In Firefox zijn site-toegangsrechten (host permissions) iets dat jij als gebruiker beheerst. Zie je de FunData-knop op Funda niet? Open dan `about:addons` → FunData → Toestemmingen en sta toegang tot funda.nl toe. De popup en de instellingenpagina laten zolang die toegang ontbreekt een melding zien met de knop "Toegang geven".
+
 **Architectuur en privacy**
 
 - Werkt volledig via directe aanroepen naar open overheids-API's (PDOK
@@ -58,6 +62,10 @@ FunData is een onafhankelijk hobbyproject. FunData is niet gelieerd aan, goedgek
   preference, with a manual override switch
 - Configurable: language (Dutch/English), icon or text-label scores, static or
   dynamic map, and what the toolbar icon does
+
+**Site access**
+
+In Firefox, site (host) permissions are controlled by you as the user. If the FunData button is missing on Funda, open `about:addons` → FunData → Permissions and allow access to funda.nl. While that access is missing, the popup and the settings page show a notice with a "Grant access" button.
 
 **Architecture and privacy**
 

@@ -395,6 +395,48 @@ tr.wrap-value td {
   color: var(--accent);
 }
 
+/* Host-access notice, shown when Firefox hasn't granted the manifest's
+   host permissions (temporary add-on, or revoked in about:addons). */
+.access-notice {
+  margin: 10px 0;
+  padding: 10px;
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+}
+
+.access-notice p {
+  margin: 0;
+  font-size: 12px;
+}
+
+.access-denied {
+  margin-top: 8px;
+  color: var(--text-secondary); /* 4.94:1 light, 7.89:1 dark on --card */
+}
+
+.access-grant-btn {
+  margin-top: 10px;
+  padding: 5px 14px;
+  border: none;
+  border-radius: 6px;
+  background: var(--accent);
+  color: #ffffff; /* 4.8:1 on the light-mode accent #b35900 */
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+:root[data-theme="dark"] .access-grant-btn {
+  /* the dark-mode accent #64c1ed is light: dark text instead, 8.6:1 */
+  color: #0d2733;
+}
+
+.access-grant-btn:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 2px;
+}
+
 /* Leaflet's layer-control panel doesn't inherit our theme variables (it's
    Leaflet's own default white/black styling) -- override just enough for
    it to stay legible in dark mode rather than showing white-on-white. */
