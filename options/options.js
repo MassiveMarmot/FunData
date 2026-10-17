@@ -1,5 +1,6 @@
 import { getSettings, setSetting, SUPPORTED_LANGUAGES, resolveLanguage, resolveTheme } from '../lib/settings.js';
 import { loadTranslations } from '../lib/i18n.js';
+import { hasHostAccess, requestHostAccess } from '../lib/host-access.js';
 
 function el(id) {
   return document.getElementById(id);
@@ -18,6 +19,9 @@ async function main() {
 
   document.title = t('options_title');
   el('title').textContent = t('options_title');
+  el('host-access-text').textContent = t('host_access_notice');
+  el('host-access-btn').textContent = t('host_access_grant');
+  el('host-access-denied').textContent = t('host_access_denied');
   el('label-language').textContent = t('settings_language_label');
   el('label-score-display').textContent = t('settings_score_display_label');
   el('label-emoji').textContent = t('settings_score_display_emoji');
@@ -32,6 +36,12 @@ async function main() {
   el('label-toolbar').textContent = t('settings_toolbar_label');
   el('label-toolbar-panel').textContent = t('settings_toolbar_panel');
   el('label-toolbar-popup').textContent = t('settings_toolbar_popup');
+
+  // Show the notice when Firefox hasn't granted the manifest's host
+  // permissions (temporary add-on, or revoked in about:addons).
+  const hasAccess = await hasHostAccess();
+  el('host-access-notice').hidden = hasAccess;
+  el('host-access-denied').hidden = true;
 
   const languageSelect = el('language');
   languageSelect.replaceChildren();
@@ -70,6 +80,31 @@ async function main() {
       document.documentElement.setAttribute('data-theme', await resolveTheme(input.value));
     });
   }
+
+  if (!bound) {
+    // requestHostAccess() (browser.permissions.request) must run directly
+    // inside the user-gesture handler, with nothing awaited before it --
+    // Firefox only shows the prompt from a user action.
+    el('host-access-btn').addEventListener('click', async () => {
+      let granted = false;
+      try {
+        granted = await requestHostAccess();
+      } catch (err) {
+        granted = false; // request() rejects rather than resolving false
+      }
+      if (granted) {
+        el('host-access-notice').hidden = true;
+      } else {
+        el('host-access-denied').hidden = false;
+      }
+    });
+
+    // Follow grants/revocations made in about:addons while this page is
+    // open: main() re-checks access and shows/hides the notice.
+    browser.permissions.onAdded.addListener(() => main());
+    browser.permissions.onRemoved.addListener(() => main());
+  }
+
   bound = true;
 }
 

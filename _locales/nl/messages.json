@@ -15,6 +15,10 @@
   "retry": { "message": "Opnieuw proberen" },
   "no_data": { "message": "Geen informatie gevonden" },
 
+  "host_access_notice": { "message": "FunData heeft je toestemming nodig om het adres van de woning op funda.nl uit te lezen en om de Nederlandse overheidsdiensten die het gebruikt (PDOK, RIVM, Sogelink, Leefbaarometer) rechtstreeks aan te roepen. Er is geen analytics en er gaat niets naar andere partijen." },
+  "host_access_grant": { "message": "Toegang geven" },
+  "host_access_denied": { "message": "Zonder deze toegang kan FunData niet op Funda werken. Je kunt dit later ook toestaan: about:addons \u2192 FunData \u2192 Toestemmingen \u2192 funda.nl toestaan." },
+
   "section_leefomgeving": { "message": "Leefomgevingskwaliteit" },
   "section_buurt": { "message": "Buurtinformatie" },
   "map_alt": { "message": "Kaart met de locatie" },
