@@ -464,8 +464,8 @@
     const trigger = getTriggerButton();
     lastFocused = document.activeElement;
     const p = await ensurePanel();
-    p.host.setAttribute('data-open', 'true');
     if (!isPanelOpen()) prevOverflow = document.documentElement.style.overflow;
+    p.host.setAttribute('data-open', 'true');
     document.documentElement.style.overflow = 'hidden'; // background scroll lock
     trigger?.setAttribute('aria-expanded', 'true');
     p.dialog.focus?.();
